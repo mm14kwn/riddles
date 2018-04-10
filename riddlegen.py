@@ -1,0 +1,56 @@
+#!python3
+import numpy as np
+from itertools import count as icount
+
+
+def ordinal(n):
+    """
+    returns the ordinal of a number (ie 1>1st, 2>2nd etc)
+    """
+    import math
+    out = "%d%s" % (
+        n,
+        "tsnrhtdd" [(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4])
+    return out
+
+
+def gen(input_string=None):
+    """
+    generates a 'my first is in x but not in y' type riddle
+    from an arbitrary string
+    """
+
+    with open('./en', 'r') as f:
+        word_list = f.read().split('\n')
+    if input_string is None:
+        input_string = input('please enter string to generate riddle from')
+    if not isinstance(input_string, str):
+        raise ValueError('Input is not string')
+    firstword = []
+    secondword = []
+    for character in input_string:
+        if character.isalpha():
+            words_with_letter = [
+                word for word in word_list if character in word
+            ]
+            words_without_letter = [
+                word for word in word_list if character not in word
+            ]
+            wlen = len(words_with_letter)
+            wolen = len(words_without_letter)
+            wind = np.random.randint(0, wlen)
+            woind = np.random.randint(0, wolen)
+            firstword.append(words_with_letter[wind])
+            secondword.append(words_without_letter[woind])
+        else:
+            firstword.append(None)
+            secondword.append(None)
+
+    for count, fw, sw, ch in zip(icount(), firstword, secondword,
+                                 input_string):
+        if fw is None or sw is None:
+            rstring = ch
+        else:
+            rstring = 'My {0} is in {1} but not in {2}\n'.format(
+                ordinal(count + 1), fw, sw)
+        print(rstring)
