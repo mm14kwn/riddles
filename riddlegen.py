@@ -80,3 +80,5 @@ def gen(input_string=None, dictionary='./en', debug=False):
             rstring = 'My {0} is in {1} but not in {2}\n'.format(
                 ordinal(count + 1), fw, sw)
         print(rstring)
+
+    print('What am I?')
